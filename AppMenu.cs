@@ -19,6 +19,7 @@ namespace Climbs
         void CreateMenu()
         {
             menu = new MenuStrip();
+            menu.Dock = DockStyle.Right;
             Controls.Add(menu);
 
             dataMenu = new ToolStripMenuItem("&Data");

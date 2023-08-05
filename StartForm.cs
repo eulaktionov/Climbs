@@ -6,7 +6,6 @@ namespace Climbs
 {
     public partial class StartForm : Form
     {
-
         TabControl tabControl;
         DataGridView grid;
 
@@ -28,6 +27,7 @@ namespace Climbs
         void MakeControls()
         {
             CreateMenu();
+
             tabControl = new TabControl();
             tabControl.Dock = DockStyle.Fill;
             Controls.Add(tabControl);
@@ -43,16 +43,19 @@ namespace Climbs
         {
             string queryText = "Select * from Country";
             SqlDataAdapter adapter = new SqlDataAdapter(queryText, connection);
-            new SqlCommandBuilder(adapter);
             DataTable dataTable = new DataTable();
             adapter.Fill(dataTable);
 
-            TabPage tab = new TabPage("Countries");
-            tabControl.Controls.Add(tab);
             grid = new DataGridView();
             grid.Dock = DockStyle.Fill;
-            tab.Controls.Add(grid);
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.ReadOnly = true;
             grid.DataSource = dataTable;
+
+            TabPage tab = new TabPage("Countries");
+            tabControl.Controls.Add(tab);
+            tab.Controls.Add(grid);
         }
     }
 }
