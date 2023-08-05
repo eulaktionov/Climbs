@@ -64,7 +64,25 @@
 чтение таблицы (строка соединения в коде)
 
 23.08.05
-config
+config 
+пример использования config
+C:\Now\Me\ADO\less02\ls02_DataTable01\ls02_DataTable01.sln  
+
+для .NET стандартом является json config - appsettings.json
+для лучшего понимания config попробуем сохранить в нем
+	дату последнего сеанса
+
+работа с json config
+https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-7.0
+для изменения значений нужно перезаписать config
+(прочитать, изменить, записать)
+https://learn.microsoft.com/en-us/answers/questions/609232/how-to-save-the-updates-i-made-to-appsettings-conf
+мораль: лучше это делать через settings.settings
+
 добавление записей
 удаление
 изменение
+
+config
+добавление config
+
