@@ -33,9 +33,13 @@ namespace Climbs
             dataMenu.DropDownItems.AddRange(new ToolStripMenuItem[]
                 { countryData, mountainData });
 
-            insertCommand = new ToolStripMenuItem("&Insert");
-            deleteCommand = new ToolStripMenuItem("&Delete");
-            updateCommand = new ToolStripMenuItem("&Update");
+            insertCommand = new ToolStripMenuItem("&Insert",
+                null, (s, e) => AddCountry(), Keys.Control | Keys.I);
+            deleteCommand = new ToolStripMenuItem("&Delete",
+                null, (s, e) => DeleteCountry(), Keys.Delete);
+            updateCommand = new ToolStripMenuItem("&Update",
+                null, (s, e) => UpdateCountry(), Keys.Control | Keys.U);
+
             editMenu.DropDownItems.AddRange(new ToolStripMenuItem[]
                 { insertCommand, deleteCommand, updateCommand });
         }
