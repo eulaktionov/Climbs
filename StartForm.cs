@@ -114,7 +114,7 @@ namespace Climbs
 
         void AddCountry()
         {
-            var addForm = new CountryForm()
+            var addForm = new EditForms.CountryForm()
             {
                 Owner = this
             };
@@ -171,10 +171,9 @@ namespace Climbs
                 if(selectedRow != null)
                 {
                     string? country = selectedRow["Name"].ToString();
-                    var addForm = new CountryForm(country)
+                    var addForm = new EditForms.CountryForm(country)
                     {
                         Owner = this,
-
                     };
                     if(addForm.ShowDialog() == DialogResult.OK)
                     {
