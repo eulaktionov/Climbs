@@ -66,27 +66,8 @@ namespace Climbs
         {
             try
             {
-                string queryText = "Select * from Country";
-                adapter = new SqlDataAdapter(queryText, connection);
-                new SqlCommandBuilder(adapter);
-                dataTable = new DataTable();
-                adapter.Fill(dataTable);
-
-                grid = new()
-                {
-                    Dock = DockStyle.Fill,
-                    AllowUserToAddRows = false,
-                    AllowUserToDeleteRows = false,
-                    ReadOnly = true,
-                    SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                    ShowCellToolTips = false,
-                    DataSource = dataTable
-                };
-
-                TabPage tab = new TabPage("Countries");
-                tabControl.Controls.Add(tab);
-                tab.Controls.Add(grid);
-                grid.Columns["Id"].Visible = false;
+                TableTabs.TableTab countryTab = new TableTabs.CountryTab("Country",connection,this);
+                tabControl.Controls.Add(countryTab);
             }
             catch(Exception ex)
             {

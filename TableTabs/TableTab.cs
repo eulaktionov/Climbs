@@ -15,11 +15,10 @@ namespace Climbs.TableTabs
         SqlDataAdapter adapter;
         DataTable dataTable;
         DataGridView grid;
-        EditForms.EditForm editForm;
+        protected EditForms.EditForm editForm;
 
         public TableTab(string tableName, SqlConnection connection,
-            Form form)
-            : base(tableName)
+            Form form) : base(tableName)
         {
             string queryText = $"Select * from {tableName}";
             adapter = new SqlDataAdapter(queryText, connection);
@@ -39,9 +38,16 @@ namespace Climbs.TableTabs
             };
 
             Controls.Add(grid);
-            grid.Columns["Id"].Visible = false;
-            editForm = new EditForms.EditForm();
-            editForm.Owner = form;
+            grid.VisibleChanged += Grid_VisibleChanged;
+            
+        }
+
+        private void Grid_VisibleChanged(object? sender, EventArgs e)
+        {
+            if (grid.Visible)
+            {
+                grid.Columns["Id"].Visible = false;
+            }
         }
 
         public void Save()
