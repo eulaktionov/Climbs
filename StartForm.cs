@@ -8,6 +8,7 @@ using System.IO;
 using System.Configuration;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace Climbs
 {
@@ -86,7 +87,6 @@ namespace Climbs
                 TabPage tab = new TabPage("Countries");
                 tabControl.Controls.Add(tab);
                 tab.Controls.Add(grid);
-                grid.Columns["Id"].Visible = false;
             }
             catch(Exception ex)
             {
@@ -141,7 +141,7 @@ namespace Climbs
                 try
                 {
                     int selectedIndex = grid.SelectedRows[0].Index;
-                    DataRow selectedRow = GetDataRow(selectedIndex);
+                    DataRow? selectedRow = (grid?.Rows[selectedIndex]?.DataBoundItem as DataRowView)?.Row;
                     if(selectedRow != null)
                     {
                         if(selectedRow.RowState == DataRowState.Added)
@@ -167,7 +167,7 @@ namespace Climbs
             if(grid.SelectedRows.Count > 0)
             {
                 int selectedIndex = grid.SelectedRows[0].Index;
-                DataRow selectedRow = GetDataRow(selectedIndex);
+                DataRow selectedRow = (grid?.Rows[selectedIndex]?.DataBoundItem as DataRowView)?.Row;
                 if(selectedRow != null)
                 {
                     string? country = selectedRow["Name"].ToString();
@@ -193,15 +193,38 @@ namespace Climbs
             }
         }
 
-        DataRow GetDataRow(int gridIndex)
+        void CloseTab()
         {
-            DataRowView selectedRowView = grid.Rows[gridIndex]
-                .DataBoundItem as DataRowView;
-            if(selectedRowView != null)
+            if (tabControl.SelectedTab is not null)
             {
-                return selectedRowView.Row;
+                tabControl.TabPages.Remove(tabControl.SelectedTab);
             }
-            else return null;
+        }
+
+        void NewTab(string key)
+        {
+            if (!tabControl.TabPages.ContainsKey(key))
+            {
+                tabControl.TabPages.Add(key, key);
+                tabControl.TabPages[key].Controls.Add(CreateTab(key));
+            }
+            tabControl.SelectTab(tabControl.TabPages[key]);
+        }
+
+        TableTab.Base CreateTab(string key)
+        {
+            if(key == CountriesTable)
+                return new TableTab.Country(connection);
+            if(key == MountainsTable)
+                return new TableTab.Mountain(connection);
+            if(key == ClimbsTable)
+                return new TableTab.Climb(connection);
+            if(key == ClimbersTable)
+                return new TableTab.Climbers(connection);
+            if(key == ClimbClimbersTable)
+                return new TableTab.ClimbClimbers(connection);
+            else
+                return null;
         }
     }
 }

@@ -78,5 +78,50 @@ namespace Climbs.Properties {
                 return ResourceManager.GetString("AppName", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ClimberClimb.
+        /// </summary>
+        internal static string ClimbClimbersTable {
+            get {
+                return ResourceManager.GetString("ClimbClimbersTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Climber.
+        /// </summary>
+        internal static string ClimbersTable {
+            get {
+                return ResourceManager.GetString("ClimbersTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Climb.
+        /// </summary>
+        internal static string ClimbsTable {
+            get {
+                return ResourceManager.GetString("ClimbsTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country.
+        /// </summary>
+        internal static string CountriesTable {
+            get {
+                return ResourceManager.GetString("CountriesTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mountain.
+        /// </summary>
+        internal static string MountainsTable {
+            get {
+                return ResourceManager.GetString("MountainsTable", resourceCulture);
+            }
+        }
     }
 }

@@ -124,4 +124,19 @@
   <data name="AppName" xml:space="preserve">
     <value>Climbe</value>
   </data>
+  <data name="ClimbClimbersTable" xml:space="preserve">
+    <value>ClimberClimb</value>
+  </data>
+  <data name="ClimbersTable" xml:space="preserve">
+    <value>Climber</value>
+  </data>
+  <data name="ClimbsTable" xml:space="preserve">
+    <value>Climb</value>
+  </data>
+  <data name="CountriesTable" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="MountainsTable" xml:space="preserve">
+    <value>Mountain</value>
+  </data>
 </root>
