@@ -15,11 +15,7 @@ namespace Climbs
     public partial class StartForm : Form
     {
         SqlConnection connection;
-        SqlDataAdapter adapter;
-        DataTable dataTable;
-
         TabControl tabControl;
-        DataGridView grid;
 
         public StartForm()
         {
@@ -35,12 +31,12 @@ namespace Climbs
         void MakeControls()
         {
             CreateMenu();
-
             tabControl = new()
             {
                 Dock = DockStyle.Fill
             };
             Controls.Add(tabControl);
+            tabControl.Deselecting += (s, e) => GetSelectedItem()?.Save();
         }
 
         void SetForm()
@@ -63,140 +59,32 @@ namespace Climbs
             connection = new SqlConnection(connectionString);
         }
 
-        void ShowCountries()
-        {
-            try
-            {
-                string queryText = "Select * from Country";
-                adapter = new SqlDataAdapter(queryText, connection);
-                new SqlCommandBuilder(adapter);
-                dataTable = new DataTable();
-                adapter.Fill(dataTable);
-
-                grid = new()
-                {
-                    Dock = DockStyle.Fill,
-                    AllowUserToAddRows = false,
-                    AllowUserToDeleteRows = false,
-                    ReadOnly = true,
-                    SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                    ShowCellToolTips = false,
-                    DataSource = dataTable
-                };
-
-                TabPage tab = new TabPage("Countries");
-                tabControl.Controls.Add(tab);
-                tab.Controls.Add(grid);
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message, AppName);
-            }
-        }
-
         void Save()
         {
-            if (adapter is not null)
+            for(int i = tabControl.TabPages.Count - 1; i >= 0; i--)
             {
-                try
-                {
-                    adapter.Update(dataTable);
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Save!");
-                }
+                GetItem(i).Save();
             }
 
             Default.LastSessionDate = DateTime.Now;
             Default.Save();
         }
 
-        void AddCountry()
-        {
-            var addForm = new CountryForm()
-            {
-                Owner = this
-            };
-            if (addForm.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    DataRow dataRow = dataTable.NewRow();
-                    dataRow["Name"] = addForm.Country;
-                    dataTable.Rows.Add(dataRow);
-                    grid.Refresh();
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Insert");
-                }
-            }
-        }
+        void Insert() => GetSelectedItem()?.Insert();
+        void Delete() => GetSelectedItem()?.Delete();
+        void Update() => GetSelectedItem()?.Update();
 
-        void DeleteCountry()
-        {
-            if(grid.SelectedRows.Count > 0)
-            {
-                try
-                {
-                    int selectedIndex = grid.SelectedRows[0].Index;
-                    DataRow? selectedRow = (grid?.Rows[selectedIndex]?.DataBoundItem as DataRowView)?.Row;
-                    if(selectedRow != null)
-                    {
-                        if(selectedRow.RowState == DataRowState.Added)
-                        {
-                            dataTable.Rows.Remove(selectedRow);
-                        }
-                        else
-                        {
-                            selectedRow.Delete();
-                        }
-                        grid.Refresh();
-                    }
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Delete");
-                }
-            }
-        }
+        TableTab.Base GetSelectedItem() =>
+            tabControl?.SelectedTab?.Controls[0] as TableTab.Base;
 
-        void UpdateCountry()
-        {
-            if(grid.SelectedRows.Count > 0)
-            {
-                int selectedIndex = grid.SelectedRows[0].Index;
-                DataRow selectedRow = (grid?.Rows[selectedIndex]?.DataBoundItem as DataRowView)?.Row;
-                if(selectedRow != null)
-                {
-                    string? country = selectedRow["Name"].ToString();
-                    var addForm = new CountryForm(country)
-                    {
-                        Owner = this,
-
-                    };
-                    if(addForm.ShowDialog() == DialogResult.OK)
-                    {
-                        try
-                        {
-                            selectedRow["Name"] = addForm.Country;
-                            grid.Refresh();
-                        }
-                        catch(Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, "Update");
-                        }
-                    }
-                    grid.Refresh();
-                }
-            }
-        }
+        TableTab.Base GetItem(int i) =>
+            tabControl?.TabPages[i]?.Controls[0] as TableTab.Base;
 
         void CloseTab()
         {
             if (tabControl.SelectedTab is not null)
             {
+                GetSelectedItem().Save();
                 tabControl.TabPages.Remove(tabControl.SelectedTab);
             }
         }
@@ -209,20 +97,21 @@ namespace Climbs
                 tabControl.TabPages[key].Controls.Add(CreateTab(key));
             }
             tabControl.SelectTab(tabControl.TabPages[key]);
+            GetSelectedItem()?.EnterData();
         }
 
         TableTab.Base CreateTab(string key)
         {
             if(key == CountriesTable)
-                return new TableTab.Country(connection);
+                return new TableTab.Country(connection, this);
             if(key == MountainsTable)
-                return new TableTab.Mountain(connection);
-            if(key == ClimbsTable)
-                return new TableTab.Climb(connection);
+                return new TableTab.Mountain(connection, this);
             if(key == ClimbersTable)
-                return new TableTab.Climbers(connection);
+                return new TableTab.Climber(connection, this);
+            if(key == ClimbsTable)
+                return new TableTab.Climb(connection, this);
             if(key == ClimbClimbersTable)
-                return new TableTab.ClimbClimbers(connection);
+                return new TableTab.ClimbClimbers(connection, this);
             else
                 return null;
         }

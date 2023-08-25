@@ -35,9 +35,6 @@ namespace Climbs
             menu.Items.AddRange(new ToolStripMenuItem[] 
                 { dataMenu, editMenu });
 
-            oneTableData = new ToolStripMenuItem("&One Table");
-            oneTableData.Click += (s, e) => ShowCountries();
-
             countryData = new ToolStripMenuItem("&Countries");
             countryData.Click += (s, e) => NewTab(CountriesTable);
 
@@ -54,16 +51,15 @@ namespace Climbs
             climbClimberData.Click += (s, e) => NewTab(ClimbClimbersTable);
 
             dataMenu.DropDownItems.AddRange(new ToolStripItem[]
-                { oneTableData, new ToolStripSeparator(),
-                  climbData, climbClimberData, climberData,
+                { climbData, climbClimberData, climberData,
                   new ToolStripSeparator(), mountainData, countryData });
 
             insertCommand = new ToolStripMenuItem("&Insert",
-                null, (s, e) => AddCountry(), Keys.Control | Keys.I);
+                null, (s, e) => Insert(), Keys.Control | Keys.I);
             deleteCommand = new ToolStripMenuItem("&Delete",
-                null, (s, e) => DeleteCountry(), Keys.Delete);
+                null, (s, e) => Delete(), Keys.Delete);
             updateCommand = new ToolStripMenuItem("&Update",
-                null, (s, e) => UpdateCountry(), Keys.Control | Keys.U);
+                null, (s, e) => Update(), Keys.Control | Keys.U);
             closeTabCommand = new ToolStripMenuItem("&Close Tab",
                 null, (s, e) => CloseTab(), Keys.Control | Keys.C);
 
